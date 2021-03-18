@@ -316,8 +316,8 @@ stim_mode = 2 # 1 = ICMS, 2 = uniform E-field
 tstop = 220
 dt = 0.025
 
-run_dir = '/home/kfuruglyas/Documents/neunos_project/neuron/final/'
-fname_to_save_data = '/home/kfuruglyas/Documents/neunos_project/neuron/data/proba.dat'
+run_dir = '.'
+fname_to_save_data = './proba.dat'
 fname_to_save_params = run_dir + "params.hoc"
 fname_to_save_rec = run_dir + 'record_params.hoc'
 v_inits = {1: -74.739,
@@ -398,11 +398,11 @@ params['project_path'] = run_dir
 params['project_name'] = 'TEMP'
 params['fname_to_save_data'] = params['project_path'] + params['project_name'] +  '.dat'
 
-def run(params, run_dir = run_dir):
+def run(params):
     create_all_params(**params)
     create_project_details(params)
     orig_pwd = os.getcwd()
-    run_dir = run_dir
+    run_dir = params['run_dir']
     os.chdir(run_dir)
     subprocess.run(["nrniv", "init.hoc"])
     os.chdir(orig_pwd)
