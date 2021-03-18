@@ -13,7 +13,7 @@ AMP = 20  // µA (stim_mode = 1) or V/m (stim_mode = 2) - amplitude of first pha
 tstop = 50
 dt = 0.025
 strdef fname_to_save
-fname_to_save = "/home/kfuruglyas/Documents/neunos_project/neuron/final/TEMP.dat"
+fname_to_save = ".TEMP.dat"
 
 objref stim_amp
 stim_amp = new Vector()

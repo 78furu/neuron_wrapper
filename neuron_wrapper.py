@@ -317,9 +317,9 @@ tstop = 220
 dt = 0.025
 
 run_dir = '.'
-fname_to_save_data = './proba.dat'
-fname_to_save_params = run_dir + "params.hoc"
-fname_to_save_rec = run_dir + 'record_params.hoc'
+fname_to_save_data = 'proba.dat'
+fname_to_save_params = run_dir + "/params.hoc"
+fname_to_save_rec = run_dir + '/record_params.hoc'
 v_inits = {1: -74.739,
          2: -72.728,
          3: -71.803,
