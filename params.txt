@@ -1,0 +1,108 @@
+# params
+stim_amps = [1 for i in range(10)]
+
+# stim_amps_fill
+
+
+# stim_amps = [np.sin(i) for i in np.linspace(0, 3.14, 10)]
+
+theta_0 = 90 
+
+#thetas = [90, 180, 0, 180, 0, 180, 0, 180, 0, 180]
+thetas = list(np.linspace(0, 180,10 ) )
+phi_0 = 0
+
+phis = [phi_0 for _ in thetas] # by def
+DEL = 1  # ms - delay to first phase
+DUR = 3 # ms - duration of each phase
+AMP = 20  # µA (stim_mode = 1) or V/m (stim_mode = 2) - amplitude of first phase
+
+cell_id = 15
+
+stim_mode = 2 # 1 = ICMS, 2 = uniform E-field
+
+
+tstop = 50
+dt = 0.025
+
+run_dir = '/home/kfuruglyas/Documents/neunos_project/neuron/final/'
+fname_to_save_data = '/home/kfuruglyas/Documents/neunos_project/neuron/data/proba.dat'
+fname_to_save_params = run_dir + "params.hoc"
+fname_to_save_rec = run_dir + 'record_params.hoc'
+v_inits = {1: -74.739,
+         2: -72.728,
+         3: -71.803,
+         4: -73.324,
+         5: -73.952,
+         7: -72.991,
+         10: -72.557,
+         11: -70.741,
+         13: -70.066,
+         14: -71.464,
+         15: -71.672,
+         19: -71.275,
+         20: -71.163,
+         21: -73.324,
+         22: -72.937,
+         24: -73.024}
+
+
+nevezektan_soma = [
+    ['eca', 'ek', 'ena'],
+    ['dica_dv_', 'dik_dv_', 'dina_dv_'],
+    ['e_extracellular', 'e_pas', 'g_pas'], 
+    ['gCa_Ca', 'gIm_Im', 'gK_Pst_K_Pst', 'gNaTs2_t_NaTs2_t'],
+    ['h_Ca', 'h_K_Pst', 'h_NaTs2_t'],
+    ['i_cap', 'i_membrane', 'i_pas'],
+    ['ica', 'ik', 'ina'], 
+    ['m_Ca', 'm_K_Pst', 'm_NaTs2_t'],
+    ['cai', 'cao', 'ki', 'ko', 'nai', 'nao']
+]
+
+nevezektan_axon = [
+    ['eca', 'ek', 'ena'],
+    ['dica_dv_', 'dik_dv_', 'dina_dv_'],
+    ['e_extracellular', 'e_pas', 'g_pas'], 
+    ['gCa_Ca', 'gIm_Im', 'gK_Pst_K_Pst', 'gNaTa_t_NaTa_t'],
+    ['h_Ca', 'h_K_Pst', 'h_NaTa_t'],
+    ['i_cap', 'i_membrane', 'i_pas'],
+    ['ica', 'ik', 'ina'], 
+    ['m_Ca', 'm_K_Pst', 'm_NaTa_t'],
+    ['cai', 'cao', 'ki', 'ko', 'nai', 'nao']
+]
+
+nevezektan_dend = [
+    ['ek', 'ena'],
+    ['dik_dv_', 'dina_dv_'],
+    ['e_extracellular', 'e_pas', 'g_pas'], 
+    ['gIm_Im', 'gK_Pst_K_Pst', 'gNaTs2_t_NaTs2_t'],
+    ['h_K_Pst', 'h_NaTs2_t'],
+    ['i_membrane', 'i_pas'],
+    ['ik', 'ina'], 
+    ['m_K_Pst', 'm_NaTs2_t'],
+    ['ki', 'ko', 'nai', 'nao']
+]
+
+nevezektan_dict = {"soma" : nevezektan_soma, "axon": nevezektan_axon, "dend": nevezektan_dend}
+
+params = {}
+
+params["stim_amps"] = stim_amps.copy()
+params["theta_0"]  = theta_0
+params["thetas"] = thetas.copy()
+params["phi_0"] = phi_0
+params["phis"] = phis
+params["DEL"], params["DUR"], params["AMP"] = DEL, DUR, AMP
+params["cell_id"] = cell_id
+params["stim_mode"] = stim_mode
+params["tstop"] = tstop
+params['dt'] = dt
+params["fname_to_save_data"] = fname_to_save_data
+params["fname_to_save_params"] = fname_to_save_params
+params['nevezektan'] = nevezektan_soma
+params['compartment'] = 'soma'
+params['part'] = 0.5
+params['fname_to_save_rec'] = fname_to_save_rec
+params['project_path'] = run_dir 
+params['project_name'] = 'TEMP'
+params['fname_to_save_data'] = params['project_path'] + params['project_name'] +  '.dat'
