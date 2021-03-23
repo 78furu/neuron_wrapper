@@ -127,7 +127,7 @@ nevezektan_dend_old = [
     ['ki', 'ko', 'nai', 'nao']
 ]
 
-nevezektan_dict = {"soma" : nevezektan_soma, "axon": nevezektan_axon, "dend": nevezektan_dend}
+nevezektan_dict = {"soma" : [0.5, nevezektan_soma], "axon": [0.166667, nevezektan_axon], "dend": [0.5, nevezektan_dend]}
 
 params = {}
 
@@ -144,7 +144,8 @@ params['dt'] = dt
 params["fname_to_save_data"] = fname_to_save_data
 params["fname_to_save_params"] = fname_to_save_params
 params['compartment'] = 'dend'
-params['nevezektan'] = nevezektan_dict[params['compartment']]
+params['nevezektan'] = nevezektan_dict
+params['save_all_params'] = True
 params['part'] = 0.5
 params['fname_to_save_rec'] = fname_to_save_rec
 params['project_path'] = run_dir 

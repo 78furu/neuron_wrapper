@@ -172,7 +172,8 @@ phis.fill(0)
 
 def create_all_params(stim_amps, theta_0, thetas, phi_0, phis, DEL, DUR, AMP, cell_id, 
                      tstop, dt, fname_to_save_data, fname_to_save_params,
-                     nevezektan, compartment, part, fname_to_save_rec, stim_mode = 2, **kwargs):
+                     nevezektan, compartment, part, fname_to_save_rec, save_all_params, 
+                     stim_mode = 2, **kwargs):
     
     create_params_file(cell_id = cell_id, theta_0=theta_0, phi_0=phi_0, DEL=DEL, 
                        DUR = DUR, AMP=AMP, tstop=tstop, dt = dt,
@@ -193,7 +194,7 @@ def create_all_params(stim_amps, theta_0, thetas, phi_0, phis, DEL, DUR, AMP, ce
     create_phis_file(phis = phis, fname_to_save = fname_to_save_params, openmode = "a" )
 
     create_recording_file(nevezektan = nevezektan, compartment = compartment, part = part,
-                    save_to = fname_to_save_rec,)
+                    save_to = fname_to_save_rec, save_all_params=save_all_params)
 
 
 def create_project_details(params):
@@ -226,7 +227,10 @@ def get_spike_counts(resp, params):
     return spike_counts
 
 
-def create_recording_file(nevezektan, compartment="soma", part = 0.5, save_to = None):
+def create_recording_file(nevezektan, compartment="soma", part = 0.5, save_to = None, save_all_params = True):
+    if save_all_params:
+        create_recording_file_all(nevezektan_dict=nevezektan, save_to=save_to)
+        return 0
     is_list_in_list = False if isinstance(nevezektan[0], str) else True
     num_of_labels = sum([len(nevezek) for nevezek in nevezektan]) if is_list_in_list else \
                                  len(nevezektan)
@@ -288,6 +292,70 @@ for i=0,rect.size()-1 {
 
             vectoring += f"rec{nev} = new Vector()\n"
             recording += f"rec{nev}.record(&cell.{compartment}.{nev}({part}))\n"
+    printing += printing_inner + """
+}
+
+savdata.close()
+"""
+    
+    final = calling + '\n\n' + vectoring + recording + '\nrun()\n\n' + '\n' + printing
+    
+    if save_to is not None:
+        f = open(save_to, 'w')
+        f.write(final)
+        f.close()
+    return final
+
+
+def create_recording_file_all(nevezektan_dict, save_to = None):
+
+    calling = "objref rect" 
+    vectoring = 'rect = new Vector()\n'
+    recording = f'rect.record(&t)\n'
+    printing= """
+objref savdata
+savdata = new File()
+savdata.wopen(fname_to_save)"""
+
+    printing += f"""
+savdata.printf("# time"""
+    
+    printing_inner= 'savdata.printf("%g '
+
+    for compartment, (part, nevezektan) in nevezektan_dict.items():
+        for nev in [nev for nev in nevezektan if nev[-1] != ']']:
+            printing += f" {compartment}.{nev}" 
+            printing_inner += "%g "
+    printing_inner += '\\n\", rect.x(i), '
+    printing +="""\\n")
+for i=0,rect.size()-1 {
+"""
+
+
+    for c0, (compartment, (part, nevezektan)) in enumerate(nevezektan_dict.items()):
+
+        for c, nev in enumerate(nevezektan):
+            if nev[-1] == "]":
+                continue
+            calling += "\nobjref"
+            if c!= len(nevezektan)-1:
+                
+                calling += f" rec_{compartment}_{nev}"
+                printing_inner += f"rec_{compartment}_{nev}.x(i), "
+
+            else:
+                if c0 == len(list(nevezektan_dict.keys()))-1:
+                    calling += f" rec_{compartment}_{nev}"
+                    printing_inner += f"rec_{compartment}_{nev}.x(i))"
+                else:
+                    calling += f" rec_{compartment}_{nev}"
+                    printing_inner += f"rec_{compartment}_{nev}.x(i), "
+
+            vectoring += f"rec_{compartment}_{nev} = new Vector()\n"
+            recording += f"rec_{compartment}_{nev}.record(&cell.{compartment}.{nev}({part}))\n"
+    
+    
+
     printing += printing_inner + """
 }
 
