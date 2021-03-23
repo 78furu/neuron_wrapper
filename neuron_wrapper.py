@@ -227,37 +227,64 @@ def get_spike_counts(resp, params):
 
 
 def create_recording_file(nevezektan, compartment="soma", part = 0.5, save_to = None):
-    num_of_labels = sum([len(nevezek) for nevezek in nevezektan])
+    is_list_in_list = False if isinstance(nevezektan[0], str) else True
+    num_of_labels = sum([len(nevezek) for nevezek in nevezektan]) if is_list_in_list else \
+                                 len(nevezektan)
     calling = "objref rect, recv" 
     vectoring = 'rect = new Vector()\nrecv = new Vector()\n'
     recording = f'rect.record(&t)\nrecv.record(&cell.{compartment}.v({part}))\n'
     printing= """
 objref savdata
 savdata = new File()
-savdata.wopen(fname_to_save)
+savdata.wopen(fname_to_save)"""
+
+    printing += f"""
+savdata.printf("# time {compartment}.voltage"""
+
+    for nev in [nev for nev in nevezektan if nev[-1] != ']']:
+        printing += f" {compartment}.{nev}" 
+
+    printing +="""\\n")
 for i=0,rect.size()-1 {
 """
 
     printing_inner= 'savdata.printf("%g %g '
 
 
-    for _ in range(num_of_labels):
+    for _ in [nev for nev in nevezektan if nev[-1] != ']']:
         printing_inner += "%g "
     printing_inner += '\\n\", rect.x(i), recv.x(i),'
 
-    for c0, nevezek in enumerate(nevezektan):
-        calling += "\nobjref"
-        for c, nev in enumerate(nevezek):
-            if c!= len(nevezek)-1:
-                calling += f" rec{nev},"
+    if is_list_in_list:
+        for c0, nevezek in enumerate(nevezektan):
+            calling += "\nobjref"
+            for c, nev in enumerate(nevezek):
+                if c!= len(nevezek)-1:
+                    calling += f" rec{nev},"
+                    printing_inner += f"rec{nev}.x(i), "
+
+                else:
+                    calling += f" rec{nev}"
+                    if c0 != len(nevezektan)-1:
+                        printing_inner += f"rec{nev}.x(i), "
+                    else:
+                        printing_inner += f"rec{nev}.x(i))"
+
+                vectoring += f"rec{nev} = new Vector()\n"
+                recording += f"rec{nev}.record(&cell.{compartment}.{nev}({part}))\n"
+    else:
+        for c, nev in enumerate(nevezektan):
+            if nev[-1] == "]":
+                continue
+            calling += "\nobjref"
+            if c!= len(nevezektan)-1:
+                
+                calling += f" rec{nev}"
                 printing_inner += f"rec{nev}.x(i), "
 
             else:
                 calling += f" rec{nev}"
-                if c0 != len(nevezektan)-1:
-                    printing_inner += f"rec{nev}.x(i), "
-                else:
-                    printing_inner += f"rec{nev}.x(i))"
+                printing_inner += f"rec{nev}.x(i))"
 
             vectoring += f"rec{nev} = new Vector()\n"
             recording += f"rec{nev}.record(&cell.{compartment}.{nev}({part}))\n"
@@ -338,7 +365,22 @@ v_inits = {1: -74.739,
          24: -73.024}
 
 
-nevezektan_soma = [
+nevezektan_soma = ["cai", "cao", "cm", "decay_CaDynamics_E2", "depth_CaDynamics_E2", "diam",
+         "dica_dv_", "dik_dv_", "dina_dv_", "e_extracellular", "e_pas", "eca",  "ek" ,"ena",
+         "es_xtra", "ex_xtra", "gCa_LVAst_Ca_LVAst", "gCa_LVAstbar_Ca_LVAst", 
+         "gCabar_Ca", "gIm_Im", "gImbar_Im", "gK_Pst_K_Pst", "gK_Pstbar_K_Pst", "gK_Tst_K_Tst",
+         "gK_Tstbar_K_Tst", "gNaTs2_t_NaTs2_t",  "gNaTs2_tbar_NaTs2_t", "gNap_Et2_Nap_Et2",  
+         "gNap_Et2bar_Nap_Et2", "gSK_E2_SK_E2", "gSK_E2bar_SK_E2", "gSKv3_1_SKv3_1", 
+         "gSKv3_1bar_SKv3_1", "g_pas", "gamma_CaDynamics_E2", "h_Ca", "h_Ca_LVAst", "h_K_Pst",
+         "h_K_Tst", "h_NaTs2_t", "h_Nap_Et2", "i_cap", "i_membrane", "i_pas", "ica", "ica_Ca",
+         "ica_Ca_LVAst", "ik", "ik_Im", "ik_K_Pst", "ik_K_Tst", "ik_SK_E2", "ik_SKv3_1", 
+         "ina", "ina_NaTs2_t", "ina_Nap_Et2", "ki", "ko", "m_Ca", "m_Ca_LVAst", "m_Im", 
+         "m_K_Pst", "m_K_Tst", "m_NaTs2_t", "m_Nap_Et2", "m_SKv3_1", "minCai_CaDynamics_E2",
+         "nai", "nao", "order_xtra", "type_xtra", "v", "vext[0]", "vext[1]", "x_xtra", "xc[0]", 
+         "xc[1]", "xg[0]", "xg[1]", "xraxial[0]", "xraxial[1]", "y_xtra", "z_SK_E2", "z_xtra" 
+         ]
+
+nevezektan_soma_old = [
     ['eca', 'ek', 'ena'],
     ['dica_dv_', 'dik_dv_', 'dina_dv_'],
     ['e_extracellular', 'e_pas', 'g_pas'], 
@@ -349,7 +391,6 @@ nevezektan_soma = [
     ['m_Ca', 'm_K_Pst', 'm_NaTs2_t'],
     ['cai', 'cao', 'ki', 'ko', 'nai', 'nao']
 ]
-
 nevezektan_axon = [
     ['eca', 'ek', 'ena'],
     ['dica_dv_', 'dik_dv_', 'dina_dv_'],
