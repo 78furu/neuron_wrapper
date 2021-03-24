@@ -371,142 +371,6 @@ savdata.close()
     return final
 
 
-amps = np.linspace(100, 8000, 15)
-neurons = list(range(1, 26))
-
-# params
-stim_amps = []
-
-# stim_amps_fill
-
-stim_amps.append(1)
-stim_amps.append(1)
-stim_amps.append(1)
-stim_amps.append(1)
-stim_amps.append(1)
-stim_amps.append(1)
-stim_amps.append(1)
-stim_amps.append(1)
-stim_amps.append(1)
-stim_amps.append(1)
-
-#stim_amps = [np.sin(i) for i in np.linspace(0, 3.14, 10)]
-
-theta_0 = 90 
-
-#thetas = [90, 180, 0, 180, 0, 180, 0, 180, 0, 180]
-thetas = list(np.linspace(0, 180,10 ) )
-phi_0 = 0
-
-phis = [phi_0 for _ in thetas]
-DEL = 1  # ms - delay to first phase
-DUR = 50 # ms - duration of first phase
-AMP = 200  # µA (stim_mode = 1) or V/m (stim_mode = 2) - amplitude of first phase
-
-cell_id = 15
-
-stim_mode = 2 # 1 = ICMS, 2 = uniform E-field
-
-
-tstop = 220
-dt = 0.025
-
-run_dir = '.'
-fname_to_save_data = 'proba.dat'
-fname_to_save_params = run_dir + "/params.hoc"
-fname_to_save_rec = run_dir + '/record_params.hoc'
-v_inits = {1: -74.739,
-         2: -72.728,
-         3: -71.803,
-         4: -73.324,
-         5: -73.952,
-         7: -72.991,
-         10: -72.557,
-         11: -70.741,
-         13: -70.066,
-         14: -71.464,
-         15: -71.672,
-         19: -71.275,
-         20: -71.163,
-         21: -73.324,
-         22: -72.937,
-         24: -73.024}
-
-
-nevezektan_soma = ["cai", "cao", "cm", "decay_CaDynamics_E2", "depth_CaDynamics_E2", "diam",
-         "dica_dv_", "dik_dv_", "dina_dv_", "e_extracellular", "e_pas", "eca",  "ek" ,"ena",
-         "es_xtra", "ex_xtra", "gCa_LVAst_Ca_LVAst", "gCa_LVAstbar_Ca_LVAst", 
-         "gCabar_Ca", "gIm_Im", "gImbar_Im", "gK_Pst_K_Pst", "gK_Pstbar_K_Pst", "gK_Tst_K_Tst",
-         "gK_Tstbar_K_Tst", "gNaTs2_t_NaTs2_t",  "gNaTs2_tbar_NaTs2_t", "gNap_Et2_Nap_Et2",  
-         "gNap_Et2bar_Nap_Et2", "gSK_E2_SK_E2", "gSK_E2bar_SK_E2", "gSKv3_1_SKv3_1", 
-         "gSKv3_1bar_SKv3_1", "g_pas", "gamma_CaDynamics_E2", "h_Ca", "h_Ca_LVAst", "h_K_Pst",
-         "h_K_Tst", "h_NaTs2_t", "h_Nap_Et2", "i_cap", "i_membrane", "i_pas", "ica", "ica_Ca",
-         "ica_Ca_LVAst", "ik", "ik_Im", "ik_K_Pst", "ik_K_Tst", "ik_SK_E2", "ik_SKv3_1", 
-         "ina", "ina_NaTs2_t", "ina_Nap_Et2", "ki", "ko", "m_Ca", "m_Ca_LVAst", "m_Im", 
-         "m_K_Pst", "m_K_Tst", "m_NaTs2_t", "m_Nap_Et2", "m_SKv3_1", "minCai_CaDynamics_E2",
-         "nai", "nao", "order_xtra", "type_xtra", "v", "vext[0]", "vext[1]", "x_xtra", "xc[0]", 
-         "xc[1]", "xg[0]", "xg[1]", "xraxial[0]", "xraxial[1]", "y_xtra", "z_SK_E2", "z_xtra" 
-         ]
-
-nevezektan_soma_old = [
-    ['eca', 'ek', 'ena'],
-    ['dica_dv_', 'dik_dv_', 'dina_dv_'],
-    ['e_extracellular', 'e_pas', 'g_pas'], 
-    ['gCa_Ca', 'gIm_Im', 'gK_Pst_K_Pst', 'gNaTs2_t_NaTs2_t'],
-    ['h_Ca', 'h_K_Pst', 'h_NaTs2_t'],
-    ['i_cap', 'i_membrane', 'i_pas'],
-    ['ica', 'ik', 'ina'], 
-    ['m_Ca', 'm_K_Pst', 'm_NaTs2_t'],
-    ['cai', 'cao', 'ki', 'ko', 'nai', 'nao']
-]
-nevezektan_axon = [
-    ['eca', 'ek', 'ena'],
-    ['dica_dv_', 'dik_dv_', 'dina_dv_'],
-    ['e_extracellular', 'e_pas', 'g_pas'], 
-    ['gCa_Ca', 'gIm_Im', 'gK_Pst_K_Pst', 'gNaTa_t_NaTa_t'],
-    ['h_Ca', 'h_K_Pst', 'h_NaTa_t'],
-    ['i_cap', 'i_membrane', 'i_pas'],
-    ['ica', 'ik', 'ina'], 
-    ['m_Ca', 'm_K_Pst', 'm_NaTa_t'],
-    ['cai', 'cao', 'ki', 'ko', 'nai', 'nao']
-]
-
-nevezektan_dend = [
-    ['ek', 'ena'],
-    ['dik_dv_', 'dina_dv_'],
-    ['e_extracellular', 'e_pas', 'g_pas'], 
-    ['gIm_Im', 'gK_Pst_K_Pst', 'gNaTs2_t_NaTs2_t'],
-    ['h_K_Pst', 'h_NaTs2_t'],
-    ['i_membrane', 'i_pas'],
-    ['ik', 'ina'], 
-    ['m_K_Pst', 'm_NaTs2_t'],
-    ['ki', 'ko', 'nai', 'nao']
-]
-
-nevezektan_dict = {"soma" : nevezektan_soma, "axon": nevezektan_axon, "dend": nevezektan_dend}
-
-params = {}
-
-params["stim_amps"] = stim_amps.copy()
-params["theta_0"]  = theta_0
-params["thetas"] = thetas.copy()
-params["phi_0"] = phi_0
-params["phis"] = phis
-params["DEL"], params["DUR"], params["AMP"] = DEL, DUR, AMP
-params["cell_id"] = cell_id
-params["stim_mode"] = stim_mode
-params["tstop"] = tstop
-params['dt'] = dt
-params["fname_to_save_data"] = fname_to_save_data
-params["fname_to_save_params"] = fname_to_save_params
-params['nevezektan'] = nevezektan_soma
-params['compartment'] = 'soma'
-params['part'] = 0.5
-params['fname_to_save_rec'] = fname_to_save_rec
-params['project_path'] = run_dir 
-params['project_name'] = 'TEMP'
-params['fname_to_save_data'] = params['project_path'] + params['project_name'] +  '.dat'
-
 def run(params):
     create_all_params(**params)
     create_project_details(params)
@@ -524,7 +388,10 @@ if __name__ == "__main__":
     except:
         pass
     if len(sys.argv) < 2:
-        run(params= params)
+        raise DeprecationWarning:
+            print("Prespecified parameters is deprecated, please use extarnal .p or .txt file for params")
+            return -1
+        # run(params= params)
     elif len(sys.argv) == 2:
         if sys.argv[1][-2:] == '.p':
             params = pickle.load(open(sys.argv[-1], "rb"))
