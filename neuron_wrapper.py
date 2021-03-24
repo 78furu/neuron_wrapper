@@ -373,7 +373,7 @@ savdata.close()
 
 def run(params):
     if isinstance(params,str):
-        elif params[-4:] == '.txt':
+        if params[-4:] == '.txt':
             exec(open(params).read())
     create_all_params(**params)
     create_project_details(params)
