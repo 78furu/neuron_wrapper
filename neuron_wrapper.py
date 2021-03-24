@@ -31,7 +31,7 @@ def generate_waveform(stim_amps, DEL, DUR, resolution = 10):
     return waveform, tax
 
 # def create_params_file(cell_id, theta_0, phi_0, DEL, DUR, AMP, tstop
-def create_params_file(cell_id, theta_0, phi_0, DEL, DUR, AMP, tstop, dt, 
+def create_params_file(cell_id, theta_0, phi_0, DEL, DUR, AMP, tstop, dt, v_inits, 
                        fname_to_save_data, fname_to_save_params, stim_mode = 2 ):
     f = open(fname_to_save_params, "w")
     stg = f"""
@@ -171,12 +171,12 @@ phis.fill(0)
 
 
 def create_all_params(stim_amps, theta_0, thetas, phi_0, phis, DEL, DUR, AMP, cell_id, 
-                     tstop, dt, fname_to_save_data, fname_to_save_params,
+                     tstop, dt, v_inits, fname_to_save_data, fname_to_save_params,
                      nevezektan, compartment, part, fname_to_save_rec, save_all_params, 
                      stim_mode = 2, **kwargs):
     
     create_params_file(cell_id = cell_id, theta_0=theta_0, phi_0=phi_0, DEL=DEL, 
-                       DUR = DUR, AMP=AMP, tstop=tstop, dt = dt,
+                       DUR = DUR, AMP=AMP, tstop=tstop, dt = dt, v_inits=v_inits,
                        fname_to_save_data = fname_to_save_data, 
                        fname_to_save_params = fname_to_save_params,
                        stim_mode = stim_mode )
