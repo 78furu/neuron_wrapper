@@ -391,8 +391,7 @@ if __name__ == "__main__":
     except:
         pass
     if len(sys.argv) < 2:
-        raise DeprecationWarning("Prespecified parameters is deprecated, please use extarnal .p or .txt file for params")
-        return -1
+        sys.exit("Prespecified parameters is deprecated, please use extarnal .p or .txt file for params")
         # run(params= params)
     elif len(sys.argv) == 2:
         if sys.argv[1][-2:] == '.p':
