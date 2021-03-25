@@ -318,7 +318,7 @@ savdata = new File()
 savdata.wopen(fname_to_save)"""
 
     printing += f"""
-savdata.printf("# time"""
+savdata.printf("time"""
     
     printing_inner= 'savdata.printf("%g '
 
@@ -380,7 +380,7 @@ def run(params):
     orig_pwd = os.getcwd()
     run_dir = params['run_dir']
     os.chdir(run_dir)
-    subprocess.run(["nrniv", "init.hoc"])
+    subprocess.run(["nrniv", "-NSTACK", "100000", "-NFRAME", "20000", "init.hoc"])
     os.chdir(orig_pwd)
 
 
