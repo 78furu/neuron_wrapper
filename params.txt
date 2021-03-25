@@ -91,6 +91,54 @@ nevezektan_dend = ["cm", "diam",
          "xc[1]", "xg[0]", "xg[1]", "xraxial[0]", "xraxial[1]", "y_xtra", "z_xtra" 
          ]
 
+nevezektan_soma_mas = ["cai", "cao", "cm", "decay_CaDynamics_E2", "depth_CaDynamics_E2", "diam",
+         "dica_dv_", "dik_dv_", "dina_dv_", "e_extracellular", "e_pas", "eca",  "ek" ,"ena",
+         "es_xtra", "ex_xtra", "gCaHVAbar_Ca_HVA",  "gCa_LVAst_Ca_LVAst", "gCa_LVAstbar_Ca_LVAst", 
+         "gIh_Ih", "gIhbar_Ih", "gNaTs2_t_NaTs2_t",  "gNaTs2_tbar_NaTs2_t",
+	 "gSK_E2_SK_E2", "gSK_E2bar_SK_E2", "gSKv3_1_SKv3_1", 
+         "gSKv3_1bar_SKv3_1", "g_pas", "gamma_CaDynamics_E2", "h_Ca_HVA", "h_Ca_LVAst", 
+	 "h_NaTs2_t","i_cap", "i_membrane", "i_pas", "ica", "ica_Ca_HVA",
+         "ica_Ca_LVAst", "ihcn_Ih", "ik", "ik_SK_E2", "ik_SKv3_1", 
+         "ina", "ina_NaTs2_t", "ki", "ko", "m_Ca_HVA", "m_Ca_LVAst", "m_Ih", 
+         "m_NaTs2_t", "m_SKv3_1", "minCai_CaDynamics_E2",
+         "nai", "nao", "order_xtra", "type_xtra", "v", "vext[0]", "vext[1]", "x_xtra", "xc[0]", 
+         "xc[1]", "xg[0]", "xg[1]", "xraxial[0]", "xraxial[1]", "y_xtra", "z_SK_E2", "z_xtra" 
+         ]
+
+nevezektan_axon_mas = ["cai", "cao", "cm", "decay_CaDynamics_E2", "depth_CaDynamics_E2", "diam",
+         "dica_dv_", "dik_dv_", "dina_dv_", "e_extracellular", "e_pas", "eca",  "ek" ,"ena",
+         "es_xtra", "ex_xtra", "gCa_HVAbar_Ca_HVA", "gCa_LVAst_Ca_LVAst", "gCa_LVAstbar_Ca_LVAst", 
+         "gK_Pst_K_Pst", "gK_Pstbar_K_Pst", "gK_Tst_K_Tst",
+         "gK_Tstbar_K_Tst", "gNaTa_t_NaTa_t",  "gNaTa_tbar_NaTa_t", "gNap_Et2_Nap_Et2",  
+         "gNap_Et2bar_Nap_Et2", "gSK_E2_SK_E2", "gSK_E2bar_SK_E2", "gSKv3_1_SKv3_1", 
+         "gSKv3_1bar_SKv3_1", "g_pas", "gamma_CaDynamics_E2", "h_Ca_HVA", "h_Ca_LVAst", "h_K_Pst",
+         "h_K_Tst", "h_NaTa_t", "h_Nap_Et2", "i_cap", "i_membrane", "i_pas", "ica", "ica_Ca_HVA",
+         "ica_Ca_LVAst", "ik", "ik_K_Pst", "ik_K_Tst", "ik_SK_E2", "ik_SKv3_1", 
+         "ina", "ina_NaTa_t", "ina_Nap_Et2", "ki", "ko", "m_Ca_HVA", "m_Ca_LVAst",  
+         "m_K_Pst", "m_K_Tst", "m_NaTa_t", "m_Nap_Et2", "m_SKv3_1", "minCai_CaDynamics_E2",
+         "nai", "nao", "order_xtra", "type_xtra", "v", "vext[0]", "vext[1]", "x_xtra", "xc[0]", 
+         "xc[1]", "xg[0]", "xg[1]", "xraxial[0]", "xraxial[1]", "y_xtra", "z_SK_E2", "z_xtra" 
+         ]
+
+nevezektan_dend_mas = ["cm", "diam",
+         "e_extracellular", "e_pas", 
+         "es_xtra", "ex_xtra", "gIh_Ih", "gIhbar_Ih", "g_pas", "i_cap", "i_membrane", "i_pas", "ihcn_Ih", 
+         "m_Ih", "order_xtra", "type_xtra", "v", "vext[0]", "vext[1]", "x_xtra", "xc[0]", 
+         "xc[1]", "xg[0]", "xg[1]", "xraxial[0]", "xraxial[1]", "y_xtra", "z_xtra" 
+         ]
+
+nevezektan_apic_mas = ["cm", "diam",
+         "dik_dv_", "dina_dv_", "e_extracellular", "e_pas", "ek" ,"ena",
+         "es_xtra", "ex_xtra", "gIh_Ih", "gIhbar_Ih", "gIm_Im", "gImbar_Im", 
+         "gNaTs2_t_NaTs2_t",  "gNaTs2_tbar_NaTs2_t", "gSKv3_1_SKv3_1", "gSKv3_1bar_SKv3_1", "g_pas", 
+	 "h_NaTs2_t", "i_cap", "i_membrane", "i_pas", "ihcn_Ih", 
+         "ik", "ik_Im", "ik_SKv3_1", 
+         "ina", "ina_NaTs2_t",  "ki", "ko", "m_Ih", "m_Im", 
+         "m_NaTs2_t", "m_SKv3_1", 
+         "nai", "nao", "order_xtra", "type_xtra", "v", "vext[0]", "vext[1]", "x_xtra", "xc[0]", 
+         "xc[1]", "xg[0]", "xg[1]", "xraxial[0]", "xraxial[1]", "y_xtra", "z_xtra" 
+         ]
+
 
 nevezektan_soma_old = [
     ['eca', 'ek', 'ena'],
@@ -128,6 +176,10 @@ nevezektan_dend_old = [
 ]
 
 nevezektan_dict = {"soma" : [0.5, nevezektan_soma], "axon": [0.166667, nevezektan_axon], "dend": [0.5, nevezektan_dend]}
+nevezektan_dict_mas = {"soma" : [0.5, nevezektan_soma_mas], "axon": [0.166667, nevezektan_axon_mas], \
+			"dend": [0.5, nevezektan_dend_mas], "apic": [0.5, nevezektan_apic_mas]}
+mas_sejtek = [6, 7, 8, 9, 10, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
+
 
 params = {}
 
@@ -144,7 +196,7 @@ params['dt'] = dt
 params["fname_to_save_data"] = fname_to_save_data
 params["fname_to_save_params"] = fname_to_save_params
 params['compartment'] = 'dend'
-params['nevezektan'] = nevezektan_dict
+params['nevezektan'] = nevezektan_dict if cell_id not in mas_sejtek else nevezektan_dict_mas
 params['save_all_params'] = True
 params['part'] = 0.5
 params['fname_to_save_rec'] = fname_to_save_rec
