@@ -1,5 +1,4 @@
 # params
-stim_amps = [1 for i in range(10)]
 
 # stim_amps_fill
 
@@ -13,6 +12,11 @@ thetas = list(np.linspace(0, 180,10 ) )
 phi_0 = 0
 
 phis = [phi_0 for _ in thetas] # by def
+
+stim_amps = [1 for _ in thetas]
+
+# stim_amps = [1,2,3,4,5,6,7,8,9,10]
+
 DEL = 1  # ms - delay to first phase
 DUR = 3 # ms - duration of each phase
 AMP = 20  # µA (stim_mode = 1) or V/m (stim_mode = 2) - amplitude of first phase
@@ -204,3 +208,4 @@ params['project_path'] = run_dir
 params['run_dir'] = run_dir 
 params['project_name'] = 'TEMP'
 params['fname_to_save_data'] = params['project_path'] + params['project_name'] +  '.dat'
+params["v_inits"] = v_inits
