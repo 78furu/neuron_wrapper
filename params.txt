@@ -93,7 +93,7 @@ nevezektan_dend = ["cm", "diam",
 
 nevezektan_soma_mas = ["cai", "cao", "cm", "decay_CaDynamics_E2", "depth_CaDynamics_E2", "diam",
          "dica_dv_", "dik_dv_", "dina_dv_", "e_extracellular", "e_pas", "eca",  "ek" ,"ena",
-         "es_xtra", "ex_xtra", "gCaHVAbar_Ca_HVA",  "gCa_LVAst_Ca_LVAst", "gCa_LVAstbar_Ca_LVAst", 
+         "es_xtra", "ex_xtra", "gCa_HVAbar_Ca_HVA",  "gCa_LVAst_Ca_LVAst", "gCa_LVAstbar_Ca_LVAst", 
          "gIh_Ih", "gIhbar_Ih", "gNaTs2_t_NaTs2_t",  "gNaTs2_tbar_NaTs2_t",
 	 "gSK_E2_SK_E2", "gSK_E2bar_SK_E2", "gSKv3_1_SKv3_1", 
          "gSKv3_1bar_SKv3_1", "g_pas", "gamma_CaDynamics_E2", "h_Ca_HVA", "h_Ca_LVAst", 
