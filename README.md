@@ -8,8 +8,16 @@ git clone https://github.com/78furu/neuron_wrapper.git
 
 ### Installation
 
-In order to use the basic programs written by Aberra et al., the mechanisms should be run. 
+In order to use the basic programs written by Aberra et al., the mechanisms should be run for the NEURON. 
 
+Linux/macOS:
+~~~bash
+cd neuron_wrapper/
+nrnivmodl mechanisms
+~~~
+
+
+Windows:
 ~~~bash
 cd neuron_wrapper/mechanisms
 mknrdll 
@@ -22,6 +30,6 @@ cd ..
 	be careful for filepaths (run_dir must be the same as the mechanisms and cells directory)
 
 2. Run
-~~~
+~~~bash
 python3 neuron_wrapper.py params.txt
 ~~~
