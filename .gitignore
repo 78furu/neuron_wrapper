@@ -3,3 +3,4 @@ record_params.hoc
 .TEMP_params.p
 names.py
 params.hoc
+__pycache__/

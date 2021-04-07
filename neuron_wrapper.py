@@ -380,7 +380,7 @@ def run(params):
     orig_pwd = os.getcwd()
     run_dir = params['run_dir']
     os.chdir(run_dir)
-    subprocess.run(["nrniv", "-NSTACK", "100000", "-NFRAME", "20000", "init.hoc"])
+    subprocess.run(["nrniv", "-nogui",  "-NSTACK", "100000", "-NFRAME", "20000", "init.hoc", "-c", "quit()"])
     os.chdir(orig_pwd)
 
 
