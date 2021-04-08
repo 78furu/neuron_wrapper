@@ -1,3 +1,12 @@
+# --------------------------------------
+# | Neuron wrapper by Kristof Furuglyas|
+# --------------------------------------
+# This code snippet is designed to give a Python3 interpreter to the NEURON's hoc snytax, 
+# and to create a possibility to simulate single neurons with various extracellular 
+# fields having different directions and amplitudes.
+# 
+# 2021, Neunos Ltd.
+
 import os, sys
 import subprocess
 import numpy as np
@@ -6,7 +15,17 @@ import pickle
 
 
 def generate_waveform(stim_amps, DEL, DUR, resolution = 10):
-    
+    """
+    Generating a waveform for later visualization. This function is not used for the 
+        core run. 
+
+        stim_amps:          list of floats, for (relative) amplitudes
+        DEL:                float, delay, awaiting time (in ms) before 1st stim
+        DUR:                float, duration of one section
+        resolution:         int, num of points taken in one stimulatory segment
+
+    Returns the list of floats (waveform itself) and the timeaxis.
+    """
     stim_times = []
     
     for _ in stim_amps:
@@ -33,6 +52,28 @@ def generate_waveform(stim_amps, DEL, DUR, resolution = 10):
 # def create_params_file(cell_id, theta_0, phi_0, DEL, DUR, AMP, tstop
 def create_params_file(cell_id, theta_0, phi_0, DEL, DUR, AMP, tstop, dt, v_inits, 
                        fname_to_save_data, fname_to_save_params, stim_mode = 2 ):
+    """
+    Creating the parameters file to determine the run specifications from given args.
+    This function creates a file written in hoc language. Rewrites _fname_to_save_params_
+    file totally.
+
+        cell_id:            int [1, 25], see Aberra et al. for specifications
+        theta_0:            float [degrees], azimuthal angle WHEN NO STIMULUS IS PRESENT
+        phi_0:              float [degrees], polar angle WHEN NO STIMULUS IS PRESENT
+        DEL:                float [ms], time before first segment of stim starts
+        DUR:                float [ms], length in time of one segment of stim
+        AMP:                float [mV/mm], overall stimulus amplitude with which all of
+                                _stim_amps_ are going to be multiplied with
+        tstop:              float [ms], total stimulation time
+        dt:                 float [ms], temporal inverse resolution; time between two steps
+        v_inits:            dict (cell_id, v_init) [mV], starting (resting) voltage of cells
+        fname_to_save_data: str, filename to save output data
+        fname_to_save_params: str, filename to save parameter hoc file (what neuron is 
+                                going to load in -- recommended/default "params.hoc")
+        stim_mode:          int [1 or 2], 1 = ICMS, 2 = uniform E-field, latter implemented
+
+    Returns nothing, creates hoc file under _fname_to_save_params_ name.   
+    """
     f = open(fname_to_save_params, "w")
     stg = f"""
 cell_id = {cell_id}
@@ -57,6 +98,23 @@ fname_to_save = "{fname_to_save_data}"
 # def create_stim_file(stim_amps, fname_to_save, AMP = 1,  openmode = 'w',
 def create_stim_file(stim_amps, fname_to_save, AMP = 1,  openmode = 'w',
                      return_stim_wfv = True):
+    """
+    Creating stimulus amplitude hoc text. Recommended to use with openmode = a, 
+    to append to fname_to_save_params (see create_params_file) file. 
+
+        stim_amps:          list (floats), containing the relative amplitudes compared
+                                to _AMP_ parameter. Those are multiplied together.
+        fname_to_save:      str, filename to print created hoc text
+        AMP:                float [mV/mm], overall stimulus amplitude with which all of
+                                _stim_amps_ are going to be multiplied with, def = 1
+        openmode:           'w' (def) or 'a', opening mode for file opening in Python3 
+                                (w: write; a: append) 
+        return_stim_wfv:    bool, whether to return stimulus waveform (in hoc lang),
+                                def = True
+    
+    Return nothing, places text to fname_to_save.
+    """
+
     stim_amps =np.array( stim_amps)*AMP
     stim_waveform_vector = []
     stim_waveform_vector.append(0)
@@ -89,6 +147,20 @@ stim_amp.fill(0)
 
 # def create_time_file(stim_waveform_vector, DEL, DUR, fname_to_save, openmode = 'a')
 def create_time_file(stim_waveform_vector, DEL, DUR, fname_to_save, openmode = 'a'):
+    """
+    Creating time vector hoc text. Recommended to use with openmode = 'a', 
+    to append to fname_to_save_params (see create_params_file) file.
+
+        stim_waveform_vector:   list or np.array, waveform in hoc format but 
+                                    on python lang
+        DEL:                    float [ms], time before first segment of stim starts
+        DUR:                    float [ms], length in time of one segment of stim   
+        fname_to_save:          str, filename to print created hoc text
+        openmode:               'w' (def) or 'a', opening mode for file opening in
+                                    Python3 (w: write; a: append) 
+    
+    Return nothing, places text to fname_to_save.
+    """
 
     time_creation_string=f"""
 objref stim_time
