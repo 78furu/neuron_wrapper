@@ -17,7 +17,7 @@ import pickle
 def generate_waveform(stim_amps, DEL, DUR, resolution = 10):
     """
     Generating a waveform for later visualization. This function is not used for the 
-        core run. 
+    core run. 
 
         stim_amps:          list of floats, for (relative) amplitudes
         DEL:                float, delay, awaiting time (in ms) before 1st stim
@@ -183,6 +183,21 @@ stim_time.fill(0)
 
 # def create_thetas_file(thetas, DEL, DUR, fname_to_save, openmode = "a")
 def create_thetas_file(thetas, DEL, DUR, fname_to_save, openmode = "a"):
+    """
+    Creating thetas vector hoc text. Thetas vector defines the azimuth angle 
+    of ec. field in every segment. Recommended to use with openmode = 'a', 
+    to append to fname_to_save_params (see create_params_file) file.
+
+        thetas:             list (floats) [degrees], containing the azimuth
+                                angles in each segment
+        DEL:                float [ms], time before first segment of stim starts
+        DUR:                float [ms], length in time of one segment of stim   
+        fname_to_save:      str, filename to print created hoc text
+        openmode:           'a' (def) or 'w', opening mode for file opening in
+                                Python3 (w: write; a: append) 
+    
+    Return nothing, places text to fname_to_save.
+    """
     thetas_creation_string=f"""
 objref thetas
 thetas = new Vector()
@@ -222,6 +237,21 @@ section_time.fill(0)
 
 # def create_thetas_file(thetas, DEL, DUR, fname_to_save, openmode = "a")
 def create_phis_file(phis, fname_to_save, openmode = "a"):
+    """
+    Creating phis vector hoc text. Phis vector defines the polar angle of 
+    ec. field in every segment. Recommended to use with openmode = 'a', 
+    to append to fname_to_save_params (see create_params_file) file.
+
+        phis:               list (floats) [degrees], containing the polar
+                                angles in each segment
+        DEL:                float [ms], time before first segment of stim starts
+        DUR:                float [ms], length in time of one segment of stim   
+        fname_to_save:      str, filename to print created hoc text
+        openmode:           'a' (def) or 'w', opening mode for file opening in
+                                Python3 (w: write; a: append) 
+    
+    Return nothing, places text to fname_to_save.
+    """    
     phis_creation_string=f"""
 objref phis
 phis = new Vector()
@@ -241,65 +271,33 @@ phis.fill(0)
     f.write(phis_vector_string)
     f.close()
 
+def create_recording_file(nevezektan, compartment="soma", part = 0.5,
+                            save_to = None, save_all_params = True):
+    """
+    Creating the recording hoc file. This file determines what segments and 
+    parameters to be recorded during run. Furthermore, it contains the core 
+    run() function that starts and supervises the simulation. If _save_all_
+    params_ is True, then nevezektan must be a dict and saves all possible 
+    params for all possible compartments, and other params are ignored (see
+    create_recording_file_all).
 
-def create_all_params(stim_amps, theta_0, thetas, phi_0, phis, DEL, DUR, AMP, cell_id, 
-                     tstop, dt, v_inits, fname_to_save_data, fname_to_save_params,
-                     nevezektan, compartment, part, fname_to_save_rec, save_all_params, 
-                     stim_mode = 2, **kwargs):
+        nevezektan:         list of lists of strings OR dict (compartment,
+                                list of...) containg the names of what to
+                                rec (nomenclature)
+        compartment:        str, "soma", "axon" or "dend" (or "apic" where
+                                applicable) determining which section to rec,
+                                def = "soma"
+        part:               float [0,1], on given compartment where to
+                                record, def = 0.5
+        save_to:            str, save file under name, if None (def) then 
+                                only returns the text
+        save_all_params:    bool, if True, dict is needed for nevezektan,
+                                runs for all compartments, otherwise other
+                                params are ignored
     
-    create_params_file(cell_id = cell_id, theta_0=theta_0, phi_0=phi_0, DEL=DEL, 
-                       DUR = DUR, AMP=AMP, tstop=tstop, dt = dt, v_inits=v_inits,
-                       fname_to_save_data = fname_to_save_data, 
-                       fname_to_save_params = fname_to_save_params,
-                       stim_mode = stim_mode )
-    stim_waveform_vector = create_stim_file(stim_amps = stim_amps, 
-                                            fname_to_save = fname_to_save_params,
-                                            AMP = AMP,  openmode = 'a',
-                                            return_stim_wfv = True)
-    
-    create_time_file(stim_waveform_vector = stim_waveform_vector, DEL = DEL, 
-                     DUR = DUR, fname_to_save = fname_to_save_params, openmode = 'a')
-    
-    create_thetas_file(thetas = thetas, DEL = DEL, DUR = DUR, 
-                       fname_to_save = fname_to_save_params, openmode = "a")
-
-    create_phis_file(phis = phis, fname_to_save = fname_to_save_params, openmode = "a" )
-
-    create_recording_file(nevezektan = nevezektan, compartment = compartment, part = part,
-                    save_to = fname_to_save_rec, save_all_params=save_all_params)
-
-
-def create_project_details(params):
-    project_path = params["project_path"]
-    project_name = params["project_name"]
-    try:
-        os.mkdir(project_path)
-    except FileExistsError:
-        pass
-    pickle.dump( params, open( project_path + project_name + '_params.p', "wb" ) )        
-
-
-def spiking_times(data):
-    time_ax, soma_volt = data[:, 0], data[:, 1]
-    spike_place = [ time_ax[v]  
-        for v in range(len(soma_volt)-1) if (soma_volt[v]*soma_volt[v+1]<0 and soma_volt[v+1] >=0)
-    ]
-    return spike_place
-
-def get_spike_counts(resp, params):
-    spikes_per_theta = {t:[] for t in params["thetas"]}
-    theta_limits = {params["DEL"] + params["DUR"]*c : t  for c, t in enumerate(params["thetas"])}
-    spiking_time = spiking_times(resp)
-
-    for spike in spiking_time:
-        lt = [th for ti, th in theta_limits.items() if ti<=spike]
-        spikes_per_theta[lt[-1]].append(spike)
-
-    spike_counts = {k: sum([1 for _ in v ]) for k, v in spikes_per_theta.items()}
-    return spike_counts
-
-
-def create_recording_file(nevezektan, compartment="soma", part = 0.5, save_to = None, save_all_params = True):
+    Returns created hoc text and if save_to is not None then saves under that 
+    filename.
+    """
     if save_all_params:
         create_recording_file_all(nevezektan_dict=nevezektan, save_to=save_to)
         return 0
@@ -380,7 +378,12 @@ savdata.close()
 
 
 def create_recording_file_all(nevezektan_dict, save_to = None):
-
+    """
+    Creating recording hoc file. This functions requires a dict as a nevezektan,
+    iterates over all compartments and saves the recording text to save_to.
+    Returns the text, too, and if save_to is not None, saves under that name.
+    
+    """
     calling = "objref rect" 
     vectoring = 'rect = new Vector()\n'
     recording = f'rect.record(&t)\n'
@@ -443,7 +446,143 @@ savdata.close()
     return final
 
 
+def create_all_params(stim_amps, theta_0, thetas, phi_0, phis, DEL, DUR, AMP, cell_id, 
+                     tstop, dt, v_inits, fname_to_save_data, fname_to_save_params,
+                     nevezektan, compartment, part, fname_to_save_rec, save_all_params, 
+                     stim_mode = 2, **kwargs):
+    """
+    Wrapper function to run all the functions needed to create the hoc files. 
+
+        stim_amps:          list of floats, for (relative) amplitudes
+        theta_0:            float [degrees], azimuthal angle WHEN NO STIMULUS IS PRESENT
+        thetas:             list (floats) [degrees], containing the azimuth
+                                angles in each segment
+        phi_0:              float [degrees], polar angle WHEN NO STIMULUS IS PRESENT
+        phis:               list (floats) [degrees], containing the polar
+                                angles in each segment
+        DEL:                float [ms], time before first segment of stim starts
+        DUR:                float [ms], length in time of one segment of stim
+        AMP:                float [mV/mm], overall stimulus amplitude with which all of
+                                _stim_amps_ are going to be multiplied with
+        cell_id:            int [1, 25], see Aberra et al. for specifications
+        tstop:              float [ms], total stimulation time
+        dt:                 float [ms], temporal inverse resolution; time between two steps
+        v_inits:            dict (cell_id, v_init) [mV], starting (resting) voltage of cells
+        fname_to_save_data: str, filename to save output data
+        fname_to_save_params: str, filename to save parameter hoc file (what neuron is 
+                                going to load in -- recommended/default "params.hoc")
+        nevezektan:         list of lists of strings OR dict (compartment,
+                                list of...) containg the names of what to
+                                rec (nomenclature)
+        compartment:        str, "soma", "axon" or "dend" (or "apic" where
+                                applicable) determining which section to rec,
+                                def = "soma"
+        part:               float [0,1], on given compartment where to
+                                record, def = 0.5
+        fname_to_save_rec:  str, save file under name, if None (def) then 
+                                only returns the text
+        save_all_params:    bool, if True, dict is needed for nevezektan,
+                                runs for all compartments, otherwise other
+                                params are ignored
+        stim_mode:          int [1 or 2], 1 = ICMS, 2 = uniform E-field, latter 
+                                implemented 
+
+    Keyword arguments are NOT passed anywhere, it is there so throws no error for
+    unknown parameters.
+
+    Returns nothing explicitly, prints to files with respect to parameters.  
+    
+    """
+    
+    create_params_file(cell_id = cell_id, theta_0=theta_0, phi_0=phi_0, DEL=DEL, 
+                       DUR = DUR, AMP=AMP, tstop=tstop, dt = dt, v_inits=v_inits,
+                       fname_to_save_data = fname_to_save_data, 
+                       fname_to_save_params = fname_to_save_params,
+                       stim_mode = stim_mode )
+    stim_waveform_vector = create_stim_file(stim_amps = stim_amps, 
+                                            fname_to_save = fname_to_save_params,
+                                            AMP = AMP,  openmode = 'a',
+                                            return_stim_wfv = True)
+    
+    create_time_file(stim_waveform_vector = stim_waveform_vector, DEL = DEL, 
+                     DUR = DUR, fname_to_save = fname_to_save_params, openmode = 'a')
+    
+    create_thetas_file(thetas = thetas, DEL = DEL, DUR = DUR, 
+                       fname_to_save = fname_to_save_params, openmode = "a")
+
+    create_phis_file(phis = phis, fname_to_save = fname_to_save_params, openmode = "a" )
+
+    create_recording_file(nevezektan = nevezektan, compartment = compartment, part = part,
+                    save_to = fname_to_save_rec, save_all_params=save_all_params)
+
+
+def create_project_details(params):
+    """
+    Creates project path folder and pickles params.
+        params:                 dict,
+            project_path (key): str, path of the project
+            project_name (key): str, name of the project
+    
+    Returns nothing, pickles out all parameters into a .p file.
+    """
+    project_path = params["project_path"]
+    project_name = params["project_name"]
+    try:
+        os.mkdir(project_path)
+    except FileExistsError:
+        pass
+    pickle.dump( params, open( project_path + project_name + '_params.p', "wb" ) )        
+
+
+def spiking_times(data):
+    """
+    Finds spiking times in data. Data has a shape [2, *any*], first column  
+    is time (in ms) second is voltage (mV). Returns list of spiking times.
+
+    Note: there is a spike in the nth time point if the nth voltage is negative
+    and the (n+1)th voltage is positive. Yes, it assumes appropriate data res.
+    """
+    time_ax, soma_volt = data[:, 0], data[:, 1]
+    spike_place = [ time_ax[v]  
+        for v in range(len(soma_volt)-1) if (soma_volt[v]*soma_volt[v+1]<0 and \
+                                        soma_volt[v+1] >=0)
+    ]
+    return spike_place
+
+def get_spike_counts(resp, params):
+    """
+    Get spike counts for a total time series but with respect to different
+    segments. 
+
+        resp:               np.array (shape: [2, *any*]), data for 
+                                spiking_times function
+        params:             dict, containg all the parameters for the run
+    
+    Returns a dict (thetas, num of spikes). 
+    """
+    spikes_per_theta = {t:[] for t in params["thetas"]}
+    theta_limits = {params["DEL"] + params["DUR"]*c : t  for c, t in enumerate(params["thetas"])}
+    spiking_time = spiking_times(resp)
+
+    for spike in spiking_time:
+        lt = [th for ti, th in theta_limits.items() if ti<=spike]
+        spikes_per_theta[lt[-1]].append(spike)
+
+    spike_counts = {k: sum([1 for _ in v ]) for k, v in spikes_per_theta.items()}
+    return spike_counts
+
+
+
 def run(params):
+    """
+    Running all the neccessary fuctions before the execution, the execute run.
+    Changing directory to appropriate path, run, change back.
+
+        params:             str, filename ending in .txt which must be 
+                                a python script having "params" as a dict
+
+    Returns nothing. 
+    """
     if isinstance(params,str):
         if params[-4:] == '.txt':
             exec(open(params).read())
@@ -472,5 +611,7 @@ if __name__ == "__main__":
         elif sys.argv[1][-4:] == '.txt':
             exec(open(sys.argv[1]).read())
             run(params= params)
+    else:
+        sys.exit("Usage: \npython3 neuron_wrapper.py params.txt")
 
 
