@@ -184,6 +184,37 @@ nevezektan_dict_mas = {"soma" : [0.5, nevezektan_soma_mas], "axon": [0.166667, n
 			"dend": [0.5, nevezektan_dend_mas], "apic": [0.5, nevezektan_apic_mas]}
 mas_sejtek = [6, 7, 8, 9, 10, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25]
 
+names = """L1_NGC-DA_bNAC219_1
+L1_NGC-DA_bNAC219_2
+L1_NGC-DA_bNAC219_3
+L1_NGC-DA_bNAC219_4
+L1_NGC-DA_bNAC219_5
+L23_PC_cADpyr229_1
+L23_PC_cADpyr229_2
+L23_PC_cADpyr229_3
+L23_PC_cADpyr229_4
+L23_PC_cADpyr229_5
+L4_LBC_cACint209_1
+L4_LBC_cACint209_2
+L4_LBC_cACint209_3
+L4_LBC_cACint209_4
+L4_LBC_cACint209_5
+L5_TTPC2_cADpyr232_1
+L5_TTPC2_cADpyr232_2
+L5_TTPC2_cADpyr232_3
+L5_TTPC2_cADpyr232_4
+L5_TTPC2_cADpyr232_5
+L6_TPC_L4_cADpyr231_1
+L6_TPC_L4_cADpyr231_2
+L6_TPC_L4_cADpyr231_3
+L6_TPC_L4_cADpyr231_4
+L6_TPC_L4_cADpyr231_5"""
+
+names =names.split('\n')
+
+neuron_names = {c + 1: name
+    for c, name in enumerate(names)
+}
 
 params = {}
 
