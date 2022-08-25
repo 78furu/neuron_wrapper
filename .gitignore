@@ -8,4 +8,6 @@ x86_64/
 notebooks/
 figs/
 .ipynb_checkpoints
+*.p
+*.dat
 
