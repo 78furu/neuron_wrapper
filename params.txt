@@ -18,7 +18,7 @@ stim_amps = [1 for _ in thetas]
 # stim_amps = [1,2,3,4,5,6,7,8,9,10]
 
 DEL = 1  # ms - delay to first phase
-DUR = 3 # ms - duration of each phase
+DUR = 9 # ms - duration of each phase
 AMP = 20  # µA (stim_mode = 1) or V/m (stim_mode = 2) - amplitude of first phase
 
 cell_id = 15
@@ -26,7 +26,7 @@ cell_id = 15
 stim_mode = 2 # 1 = ICMS, 2 = uniform E-field
 
 
-tstop = 1 # ms
+tstop = 10 # ms
 dt = 0.025 # ms
 
 run_dir = '.'
@@ -237,6 +237,6 @@ params['part'] = 0.5
 params['fname_to_save_rec'] = fname_to_save_rec
 params['project_path'] = run_dir 
 params['run_dir'] = run_dir 
-params['project_name'] = 'TEMP'
+params['project_name'] = 'Project1'
 params['fname_to_save_data'] = params['project_path'] + params['project_name'] +  '.dat'
 params["v_inits"] = v_inits
