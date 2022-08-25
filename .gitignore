@@ -5,4 +5,6 @@ names.py
 params.hoc
 __pycache__/
 x86_64/
+notebooks/
+figs/
 
