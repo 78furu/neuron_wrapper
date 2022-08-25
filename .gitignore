@@ -7,4 +7,5 @@ __pycache__/
 x86_64/
 notebooks/
 figs/
+.ipynb_checkpoints
 

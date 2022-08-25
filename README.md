@@ -32,6 +32,8 @@ cd ..
 ~~~
 
 ### Usage:
+__Please use Example.ipynb instead.__
+
 1. check parameters in params.txt (or any specified .p pickle obj conating the dict)
 	be careful for filepaths (run_dir must be the same as the mechanisms and cells directory)
 
