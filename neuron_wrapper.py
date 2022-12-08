@@ -427,8 +427,10 @@ for i=0,rect.size()-1 {
                     printing_inner += f"rec_{compartment}_{nev}.x(i), "
 
             vectoring += f"rec_{compartment}_{nev} = new Vector()\n"
-            recording += f"rec_{compartment}_{nev}.record(&cell.{compartment}.{nev}({part}))\n"
-    
+            if compartment == 'axon':
+                recording += f"rec_{compartment}_{nev}.record(&cell.{compartment}[0].{nev}({part}))\n"
+            else:
+                recording += f"rec_{compartment}_{nev}.record(&cell.{compartment}.{nev}({part}))\n"
     
 
     printing += printing_inner + """
@@ -591,7 +593,7 @@ def run(params):
     orig_pwd = os.getcwd()
     run_dir = params['run_dir']
     os.chdir(run_dir)
-    subprocess.run(["nrniv", "-nogui",  "-NSTACK", "100000", "-NFRAME", "20000", "init.hoc", "-c", "quit()"])
+    subprocess.run(["nrniv", "-nogui",  "-NSTACK", "100000", "-NFRAME", "20000", "init_w_start.hoc", "-c", "quit()"])
     os.chdir(orig_pwd)
 
 
